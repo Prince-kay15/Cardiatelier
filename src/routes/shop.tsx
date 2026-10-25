@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -7,12 +7,12 @@ import { ProductCard } from "@/components/product-card";
 import { productsQuery } from "@/lib/products";
 
 type ShopSearch = {
-  type?: "ready_to_wear" | "made_to_order";
+  type?: "ready_to_wear" | "made_to_order" | undefined;
 };
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (search: Record<string, unknown>): ShopSearch => {
-    const type = search.type;
+    const type = search["type"];
     return {
       type: type === "ready_to_wear" || type === "made_to_order" ? type : undefined,
     };

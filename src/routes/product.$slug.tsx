@@ -51,8 +51,8 @@ function ProductPage() {
 
 function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const [activeImage, setActiveImage] = useState(0);
-  const [size, setSize] = useState<string | null>(product.sizes.length === 1 ? product.sizes[0] : null);
-  const [color, setColor] = useState<string | null>(product.colors.length === 1 ? product.colors[0] : null);
+  const [size, setSize] = useState<string | null>(product.sizes.length === 1 ? (product.sizes[0] ?? null) : null);
+  const [color, setColor] = useState<string | null>(product.colors.length === 1 ? (product.colors[0] ?? null) : null);
   const [added, setAdded] = useState(false);
 
   const requiresSize = product.sizes.length > 1;

@@ -8,6 +8,13 @@
       "when": 1792784882281,
       "tag": "0000_create_shop_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792899854771,
+      "tag": "0001_grants_storage_policies_first_admin",
+      "breakpoints": true
     }
   ]
 }

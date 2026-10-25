@@ -39,11 +39,12 @@ export function SiteHeader() {
           {navItems.map((item) => {
             const active =
               pathname === item.to || (item.to === "/shop" && pathname.startsWith("/product"));
+            const searchProps = "search" in item ? { search: item.search } : {};
             return (
               <Link
                 key={item.label}
                 to={item.to}
-                search={"search" in item ? (item.search as Record<string, string>) : undefined}
+                {...searchProps}
                 className={`text-[0.7rem] tracking-[0.22em] uppercase transition-colors hover:text-gold-deep ${
                   active ? "text-gold-deep" : "text-foreground/80"
                 }`}
@@ -71,17 +72,20 @@ export function SiteHeader() {
       {open && (
         <nav className="border-t border-border bg-background px-4 py-4 md:hidden">
           <div className="flex flex-col gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                search={"search" in item ? (item.search as Record<string, string>) : undefined}
-                onClick={() => setOpen(false)}
-                className="text-xs tracking-[0.22em] uppercase text-foreground/85"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const searchProps = "search" in item ? { search: item.search } : {};
+              return (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  {...searchProps}
+                  onClick={() => setOpen(false)}
+                  className="text-xs tracking-[0.22em] uppercase text-foreground/85"
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
         </nav>
       )}

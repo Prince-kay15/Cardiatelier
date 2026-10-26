@@ -78,9 +78,9 @@ function CheckoutPage() {
         p_customer_email: form.email.trim(),
         p_customer_phone: form.phone.trim(),
         p_delivery_address: form.address.trim(),
-        p_city: form.city.trim() || null,
-        p_state: form.state.trim() || null,
-        p_notes: form.notes.trim() || null,
+        p_city: form.city.trim() || undefined,
+        p_state: form.state.trim() || undefined,
+        p_notes: form.notes.trim() || undefined,
         p_items: items.map((item) => ({
           product_name: item.name,
           quantity: item.quantity,

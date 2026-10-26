@@ -59,8 +59,11 @@ export function subscribeToCart(listener: () => void) {
   };
 }
 
+const EMPTY_CART: CartItem[] = [];
+
 export function useCart(): CartItem[] {
-  return useSyncExternalStore(subscribeToCart, getCartSnapshot, () => []);
+  // Both snapshots must be stable references or React re-renders forever.
+  return useSyncExternalStore(subscribeToCart, getCartSnapshot, () => EMPTY_CART);
 }
 
 export function itemKey(productId: string, size: string | null, color: string | null) {

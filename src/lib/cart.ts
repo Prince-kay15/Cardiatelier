@@ -52,6 +52,7 @@ export function getCartSnapshot(): CartItem[] {
 }
 
 export function subscribeToCart(listener: () => void) {
+  refreshSnapshot(); // pick up storage changes (e.g. another tab) before re-rendering
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
@@ -67,7 +68,7 @@ export function itemKey(productId: string, size: string | null, color: string | 
 }
 
 export function addToCart(item: Omit<CartItem, "key">) {
-  const items = readCart();
+  const items = getCartSnapshot();
   const key = itemKey(item.productId, item.size, item.color);
   const existing = items.find((i) => i.key === key);
   if (existing) {
@@ -82,7 +83,7 @@ export function addToCart(item: Omit<CartItem, "key">) {
 }
 
 export function updateQuantity(key: string, quantity: number) {
-  const items = readCart();
+  const items = getCartSnapshot();
   if (quantity <= 0) {
     writeCart(items.filter((i) => i.key !== key));
   } else {
@@ -91,7 +92,7 @@ export function updateQuantity(key: string, quantity: number) {
 }
 
 export function removeFromCart(key: string) {
-  writeCart(readCart().filter((i) => i.key !== key));
+  writeCart(getCartSnapshot().filter((i) => i.key !== key));
 }
 
 export function clearCart() {

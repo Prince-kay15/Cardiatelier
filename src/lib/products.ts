@@ -66,3 +66,39 @@ export function productQuery(slug: string) {
     },
   });
 }
+
+// Admin variants — RLS grants admins access; inactive products included.
+export function adminProductsQuery() {
+  return queryOptions({
+    queryKey: ["products", "admin"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as Product[];
+    },
+  });
+}
+
+export type ProductInput = Omit<Product, "id" | "created_at" | "updated_at">;
+
+export async function createProduct(input: ProductInput) {
+  const { data, error } = await supabase.from("products").insert(input).select("id").single();
+  if (error) throw error;
+  return data.id as string;
+}
+
+export async function updateProduct(id: string, input: ProductInput) {
+  const { error } = await supabase
+    .from("products")
+    .update({ ...input, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+export async function deleteProduct(id: string) {
+  const { error } = await supabase.from("products").delete().eq("id", id);
+  if (error) throw error;
+}

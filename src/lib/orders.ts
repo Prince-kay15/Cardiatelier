@@ -28,7 +28,13 @@ export type OrderRow = {
   order_items: OrderItemRow[];
 };
 
-export const ORDER_STATUSES = ["pending", "confirmed", "delivered", "cancelled"] as const;
+export const ORDER_STATUSES = [
+  "payment_pending",
+  "confirmed",
+  "shipped",
+  "delivered",
+  "cancelled",
+] as const;
 export type OrderStatus = (typeof ORDER_STATUSES)[number];
 
 export function adminOrdersQuery() {

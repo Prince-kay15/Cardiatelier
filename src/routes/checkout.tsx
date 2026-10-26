@@ -71,41 +71,29 @@ function CheckoutPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const orderRef = generateOrderRef();
-      const { data: order, error: orderError } = await supabase
-        .from("orders")
-        .insert({
-          order_ref: orderRef,
-          customer_name: form.name.trim(),
-          customer_email: form.email.trim(),
-          customer_phone: form.phone.trim(),
-          delivery_address: form.address.trim(),
-          city: form.city.trim() || null,
-          state: form.state.trim() || null,
-          notes: form.notes.trim() || null,
-          subtotal,
-          delivery_fee: deliveryKnown ? (deliveryFee as number) : 0,
-          total,
-          status: "pending",
-        })
-        .select("id")
-        .single();
-      if (orderError) throw orderError;
-
-      const { error: itemsError } = await supabase.from("order_items").insert(
-        items.map((item) => ({
-          order_id: order.id,
+      const ref = generateOrderRef();
+      const { error: orderError } = await supabase.rpc("place_order", {
+        p_order_ref: ref,
+        p_customer_name: form.name.trim(),
+        p_customer_email: form.email.trim(),
+        p_customer_phone: form.phone.trim(),
+        p_delivery_address: form.address.trim(),
+        p_city: form.city.trim() || null,
+        p_state: form.state.trim() || null,
+        p_notes: form.notes.trim() || null,
+        p_items: items.map((item) => ({
           product_name: item.name,
           quantity: item.quantity,
           size: item.size,
           color: item.color,
           unit_price: item.price,
         })),
-      );
-      if (itemsError) throw itemsError;
+        p_delivery_fee: deliveryKnown ? (deliveryFee as number) : 0,
+      });
+      if (orderError) throw orderError;
 
       clearCart();
-      setPlaced({ ref: orderRef, total, itemCount: cartSubtotalLength(items) });
+      setPlaced({ ref, total, itemCount: cartSubtotalLength(items) });
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong placing your order. Please try again.",

@@ -16,7 +16,12 @@ export type CartItem = {
 const STORAGE_KEY = "cardiatelier-cart";
 const listeners = new Set<() => void>();
 
-function readCart(): CartItem[] {
+// Cached snapshot: useSyncExternalStore requires getSnapshot to return a
+// stable reference between renders, otherwise React re-renders forever.
+let snapshot: CartItem[] = [];
+let initialized = false;
+
+function parseCart(): CartItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
@@ -27,24 +32,38 @@ function readCart(): CartItem[] {
   }
 }
 
+function refreshSnapshot() {
+  const next = parseCart();
+  // Only swap references when the contents actually change so renders settle.
+  if (JSON.stringify(next) !== JSON.stringify(snapshot)) snapshot = next;
+  initialized = true;
+}
+
 function writeCart(items: CartItem[]) {
+  snapshot = items;
+  initialized = true;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   listeners.forEach((listener) => listener());
 }
 
 export function getCartSnapshot(): CartItem[] {
-  return readCart();
+  if (!initialized) refreshSnapshot();
+  return snapshot;
 }
 
 export function subscribeToCart(listener: () => void) {
+  refreshSnapshot(); // pick up storage changes (e.g. another tab) before re-rendering
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
 }
 
+const EMPTY_CART: CartItem[] = [];
+
 export function useCart(): CartItem[] {
-  return useSyncExternalStore(subscribeToCart, getCartSnapshot, () => []);
+  // Both snapshots must be stable references or React re-renders forever.
+  return useSyncExternalStore(subscribeToCart, getCartSnapshot, () => EMPTY_CART);
 }
 
 export function itemKey(productId: string, size: string | null, color: string | null) {
@@ -52,7 +71,7 @@ export function itemKey(productId: string, size: string | null, color: string | 
 }
 
 export function addToCart(item: Omit<CartItem, "key">) {
-  const items = readCart();
+  const items = getCartSnapshot();
   const key = itemKey(item.productId, item.size, item.color);
   const existing = items.find((i) => i.key === key);
   if (existing) {
@@ -67,7 +86,7 @@ export function addToCart(item: Omit<CartItem, "key">) {
 }
 
 export function updateQuantity(key: string, quantity: number) {
-  const items = readCart();
+  const items = getCartSnapshot();
   if (quantity <= 0) {
     writeCart(items.filter((i) => i.key !== key));
   } else {
@@ -76,7 +95,7 @@ export function updateQuantity(key: string, quantity: number) {
 }
 
 export function removeFromCart(key: string) {
-  writeCart(readCart().filter((i) => i.key !== key));
+  writeCart(getCartSnapshot().filter((i) => i.key !== key));
 }
 
 export function clearCart() {

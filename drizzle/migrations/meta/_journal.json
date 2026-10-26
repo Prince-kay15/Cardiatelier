@@ -15,6 +15,13 @@
       "when": 1792899854771,
       "tag": "0001_grants_storage_policies_first_admin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793015200077,
+      "tag": "0002_grant_orders_anon_insert",
+      "breakpoints": true
     }
   ]
 }

@@ -36,6 +36,13 @@
       "when": 1793015330096,
       "tag": "0004_fix_place_order_function",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793015642911,
+      "tag": "0005_attach_first_admin_trigger",
+      "breakpoints": true
     }
   ]
 }

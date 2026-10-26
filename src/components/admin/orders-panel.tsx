@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { adminOrdersQuery, setOrderStatus, ORDER_STATUSES, type OrderRow } from "@/lib/orders";
+import { adminOrdersQuery, setOrderStatus, ORDER_STATUSES, type OrderRow, type OrderStatus } from "@/lib/orders";
 import { formatNaira, waLink } from "@/lib/format";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -25,7 +25,7 @@ export function OrdersPanel() {
   const queryClient = useQueryClient();
 
   async function changeStatus(order: OrderRow, status: string) {
-    await setOrderStatus(order.id, status as OrderRow["status"] & string);
+    await setOrderStatus(order.id, status as OrderStatus);
     queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
   }
 

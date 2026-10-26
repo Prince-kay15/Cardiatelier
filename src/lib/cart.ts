@@ -16,7 +16,12 @@ export type CartItem = {
 const STORAGE_KEY = "cardiatelier-cart";
 const listeners = new Set<() => void>();
 
-function readCart(): CartItem[] {
+// Cached snapshot: useSyncExternalStore requires getSnapshot to return a
+// stable reference between renders, otherwise React re-renders forever.
+let snapshot: CartItem[] = [];
+let initialized = false;
+
+function parseCart(): CartItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
@@ -27,13 +32,23 @@ function readCart(): CartItem[] {
   }
 }
 
+function refreshSnapshot() {
+  const next = parseCart();
+  // Only swap references when the contents actually change so renders settle.
+  if (JSON.stringify(next) !== JSON.stringify(snapshot)) snapshot = next;
+  initialized = true;
+}
+
 function writeCart(items: CartItem[]) {
+  snapshot = items;
+  initialized = true;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   listeners.forEach((listener) => listener());
 }
 
 export function getCartSnapshot(): CartItem[] {
-  return readCart();
+  if (!initialized) refreshSnapshot();
+  return snapshot;
 }
 
 export function subscribeToCart(listener: () => void) {

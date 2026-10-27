@@ -30,6 +30,7 @@ export function SettingsPanel() {
         account_number: form.account_number.trim(),
         account_name: form.account_name.trim(),
         whatsapp_number: form.whatsapp_number.trim(),
+        owner_email: form.owner_email.trim(),
         delivery_fee: feeRaw === null ? null : Number(feeRaw) || 0,
         delivery_note: form.delivery_note.trim(),
       });

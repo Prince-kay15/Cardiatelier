@@ -43,6 +43,13 @@
       "when": 1793015642911,
       "tag": "0005_attach_first_admin_trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793121831919,
+      "tag": "0006_orders_ready_info",
+      "breakpoints": true
     }
   ]
 }

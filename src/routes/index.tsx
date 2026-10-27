@@ -25,7 +25,7 @@ function Index() {
           <img
             src={heroAsset.url}
             alt="Cardiatelier gold logo"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full scale-105 object-cover blur-[2px] md:blur-[3px]"
           />
           <div className="hero-overlay absolute inset-0" />
           <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">

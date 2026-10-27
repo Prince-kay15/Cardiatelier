@@ -30,6 +30,7 @@ export function SettingsPanel() {
         account_number: form.account_number.trim(),
         account_name: form.account_name.trim(),
         whatsapp_number: form.whatsapp_number.trim(),
+        owner_email: form.owner_email.trim(),
         delivery_fee: feeRaw === null ? null : Number(feeRaw) || 0,
         delivery_note: form.delivery_note.trim(),
       });
@@ -93,6 +94,20 @@ export function SettingsPanel() {
           onChange={(e) => setForm((f) => ({ ...f, whatsapp_number: e.target.value }))}
           placeholder="e.g. 2348012345678"
           inputMode="tel"
+        />
+      </div>
+
+      <div>
+        <p className="eyebrow text-foreground/70">Order Notification Email</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          New orders are sent to this inbox, and accepted orders email the customer automatically.
+        </p>
+        <input
+          type="email"
+          className={`${inputClass} mt-3`}
+          value={form.owner_email}
+          onChange={(e) => setForm((f) => ({ ...f, owner_email: e.target.value }))}
+          placeholder="you@yourdomain.com"
         />
       </div>
 

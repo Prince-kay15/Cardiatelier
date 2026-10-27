@@ -24,6 +24,8 @@ export type OrderRow = {
   delivery_fee: number;
   total: number;
   status: string;
+  ready_info: string | null;
+  accepted_at: string | null;
   created_at: string;
   order_items: OrderItemRow[];
 };
@@ -53,5 +55,18 @@ export function adminOrdersQuery() {
 
 export async function setOrderStatus(id: string, status: OrderStatus) {
   const { error } = await supabase.from("orders").update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+/** Accept an order: mark it confirmed and record where/when it will be ready. */
+export async function acceptOrder(id: string, readyInfo: string) {
+  const { error } = await supabase
+    .from("orders")
+    .update({
+      status: "confirmed",
+      ready_info: readyInfo.trim() ? readyInfo.trim() : null,
+      accepted_at: new Date().toISOString(),
+    })
+    .eq("id", id);
   if (error) throw error;
 }

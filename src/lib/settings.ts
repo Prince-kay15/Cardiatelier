@@ -6,6 +6,7 @@ export type SiteSettings = {
   account_number: string;
   account_name: string;
   whatsapp_number: string;
+  owner_email: string;
   delivery_fee: number | null;
   delivery_note: string;
 };
@@ -14,7 +15,8 @@ export const defaultSettings: SiteSettings = {
   bank_name: "",
   account_number: "",
   account_name: "",
-  whatsapp_number: "",
+  whatsapp_number: "2348160718606",
+  owner_email: "",
   delivery_fee: null,
   delivery_note: "Delivery is available nationwide. We confirm your delivery fee once your order is received.",
 };

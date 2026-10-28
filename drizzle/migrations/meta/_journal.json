@@ -57,6 +57,13 @@
       "when": 1793213960905,
       "tag": "0007_tighten_order_and_storage_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793214289445,
+      "tag": "0008_product_images_public_read_policy",
+      "breakpoints": true
     }
   ]
 }

@@ -30,7 +30,15 @@ export function settingsQuery() {
       const merged: SiteSettings = { ...defaultSettings };
       for (const row of data ?? []) {
         if (row.key in merged) {
-          (merged as unknown as Record<string, unknown>)[row.key] = row.value;
+          // Settings are stored as JSON, so text fields can come back typed as
+          // numbers (e.g. a phone number saved without quotes). Coerce each
+          // field back to the type the app expects.
+          (merged as unknown as Record<string, unknown>)[row.key] =
+            row.key === "delivery_fee"
+              ? row.value === null || row.value === ""
+                ? null
+                : Number(row.value)
+              : String(row.value ?? "");
         }
       }
       return merged;

@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// Serves product photos from the private product-images bucket. The workspace
-// blocks public buckets, so the storefront fetches images through this route.
-// Only reads from the "products/" folder — nothing else is exposed.
+// Serves product photos from the product-images bucket. The workspace blocks
+// public buckets, so the storefront fetches images through this route on any
+// host (Lovable, Vercel, ...). It reads with the publishable key, gated by a
+// storage.objects SELECT policy scoped to the product-images bucket, and only
+// reads from the "products/" folder — nothing else is exposed.
 export const Route = createFileRoute("/api/public/product-image/$")({
   server: {
     handlers: {
@@ -12,9 +14,9 @@ export const Route = createFileRoute("/api/public/product-image/$")({
           return new Response("Not found", { status: 404 });
         }
         try {
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-          const { data, error } = await supabaseAdmin.storage
-            .from("product-images")
+          const { getPublicStorageClient } = await import("@/lib/product-image.server");
+          const { data, error } = await getPublicStorageClient()
+            .storage.from("product-images")
             .download(objectPath);
           if (error || !data) return new Response("Not found", { status: 404 });
           const contentType = data.type || "image/jpeg";

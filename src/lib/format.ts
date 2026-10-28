@@ -2,8 +2,8 @@ export function formatNaira(amount: number) {
   return `₦${(amount ?? 0).toLocaleString("en-NG")}`;
 }
 
-export function waLink(phone: string | null | undefined, message: string) {
-  const digits = (phone ?? "").replace(/[^\d]/g, "");
+export function waLink(phone: string | number | null | undefined, message: string) {
+  const digits = String(phone ?? "").replace(/[^\d]/g, "");
   const base = digits ? `https://wa.me/${digits}` : "https://wa.me/";
   return `${base}?text=${encodeURIComponent(message)}`;
 }

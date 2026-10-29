@@ -14,37 +14,43 @@ export const Route = createFileRoute("/api/public/product-image/$")({
           return new Response("Not found", { status: 404 });
         }
         // Try the publishable key first (works on any host where the narrow
-        // owner-bound storage policy applies); on hosts with the admin key
-        // available (Lovable), fall back so uploaded photos still display.
+        // owner-bound storage policy applies); if that is denied — which the
+        // client reports as an error result rather than a thrown error — fall
+        // back to the admin client where it is available (Lovable hosts).
+        let body: Blob | undefined;
+        let contentType = "image/jpeg";
+        const notFound = () => new Response("Not found", { status: 404 });
         try {
           const { getPublicStorageClient } = await import("@/lib/product-image.server");
           const { data, error } = await getPublicStorageClient()
             .storage.from("product-images")
             .download(objectPath);
-          if (error || !data) return new Response("Not found", { status: 404 });
-          return new Response(data, {
-            headers: {
-              "Content-Type": data.type || "image/jpeg",
-              "Cache-Control": "public, max-age=31536000, immutable",
-            },
-          });
+          if (!error && data) {
+            body = data;
+            contentType = data.type || contentType;
+          }
         } catch {
+          // publishable read unavailable on this host — try the admin client
+        }
+        if (!body) {
           try {
             const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
             const { data, error } = await supabaseAdmin.storage
               .from("product-images")
               .download(objectPath);
-            if (error || !data) return new Response("Not found", { status: 404 });
-            return new Response(data, {
-              headers: {
-                "Content-Type": data.type || "image/jpeg",
-                "Cache-Control": "public, max-age=31536000, immutable",
-              },
-            });
+            if (error || !data) return notFound();
+            body = data;
+            contentType = data.type || contentType;
           } catch {
-            return new Response("Not found", { status: 404 });
+            return notFound();
           }
         }
+        return new Response(body, {
+          headers: {
+            "Content-Type": contentType,
+            "Cache-Control": "public, max-age=31536000, immutable",
+          },
+        });
       },
     },
   },

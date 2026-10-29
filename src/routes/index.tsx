@@ -5,8 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { ProductCard } from "@/components/product-card";
 import { productsQuery } from "@/lib/products";
-import heroAsset from "@/assets/logo-3d-gold.jpg.asset.json";
-import wordmarkLight from "@/assets/wordmark-light.png.asset.json";
+// Bundled in public/logos so the logos load on any host (Lovable, Vercel, ...).
 import { featuredProductsQuery } from "@/lib/products";
 
 export const Route = createFileRoute("/")({

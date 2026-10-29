@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin } from "lucide-react";
-import wordmarkFooter from "@/assets/wordmark-footer.png.asset.json";
+// Bundled in public/logos so the wordmark loads on any host (Lovable, Vercel, ...).
 
 const address = "No. 9 Akinola Dosunmu Street, Basin";
 

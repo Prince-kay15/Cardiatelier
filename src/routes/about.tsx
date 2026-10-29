@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
-import wordmarkLight from "@/assets/wordmark-light.png.asset.json";
+// Bundled in public/logos so the wordmark loads on any host (Lovable, Vercel, ...).
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,

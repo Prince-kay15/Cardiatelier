@@ -22,7 +22,7 @@ function Index() {
         {/* Hero */}
         <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden">
           <img
-            src={heroAsset.url}
+            src="/logos/logo-3d-gold.jpg"
             alt="Cardiatelier gold logo"
             className="absolute inset-0 h-full w-full scale-105 object-cover blur-[2px] md:blur-[3px]"
           />
@@ -132,7 +132,7 @@ function Index() {
 
         {/* Brand strip */}
         <section className="mx-auto max-w-4xl px-4 py-16 text-center md:px-6 md:py-24">
-          <img src={wordmarkLight.url} alt="Cardiatelier" className="mx-auto h-28 w-auto object-contain md:h-36" />
+          <img src="/logos/wordmark-light.png" alt="Cardiatelier" className="mx-auto h-28 w-auto object-contain md:h-36" />
           <p className="mx-auto mt-8 max-w-2xl font-display text-xl leading-relaxed italic text-foreground/80 md:text-2xl">
             "Every piece tells a story — of craft, of culture, of the woman wearing it."
           </p>

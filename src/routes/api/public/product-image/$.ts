@@ -13,21 +13,37 @@ export const Route = createFileRoute("/api/public/product-image/$")({
         if (!objectPath.startsWith("products/") || objectPath.includes("..")) {
           return new Response("Not found", { status: 404 });
         }
+        // Try the publishable key first (works on any host where the narrow
+        // owner-bound storage policy applies); on hosts with the admin key
+        // available (Lovable), fall back so uploaded photos still display.
         try {
           const { getPublicStorageClient } = await import("@/lib/product-image.server");
           const { data, error } = await getPublicStorageClient()
             .storage.from("product-images")
             .download(objectPath);
           if (error || !data) return new Response("Not found", { status: 404 });
-          const contentType = data.type || "image/jpeg";
           return new Response(data, {
             headers: {
-              "Content-Type": contentType,
+              "Content-Type": data.type || "image/jpeg",
               "Cache-Control": "public, max-age=31536000, immutable",
             },
           });
         } catch {
-          return new Response("Not found", { status: 404 });
+          try {
+            const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+            const { data, error } = await supabaseAdmin.storage
+              .from("product-images")
+              .download(objectPath);
+            if (error || !data) return new Response("Not found", { status: 404 });
+            return new Response(data, {
+              headers: {
+                "Content-Type": data.type || "image/jpeg",
+                "Cache-Control": "public, max-age=31536000, immutable",
+              },
+            });
+          } catch {
+            return new Response("Not found", { status: 404 });
+          }
         }
       },
     },

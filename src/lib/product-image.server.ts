@@ -9,9 +9,11 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/integrations/supabase/types';
 
 function createPublishableClient() {
-  const url = process.env['SUPABASE_URL'] ?? import.meta.env.VITE_SUPABASE_URL;
+  const url =
+    process.env['SUPABASE_URL'] ?? import.meta.env['VITE_SUPABASE_URL'];
   const key =
-    process.env['SUPABASE_PUBLISHABLE_KEY'] ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    process.env['SUPABASE_PUBLISHABLE_KEY'] ??
+    import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'];
   if (!url || !key) {
     throw new Error('Missing Supabase environment variables for product image serving');
   }

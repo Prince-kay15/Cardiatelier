@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
-import wordmarkLight from "@/assets/wordmark-light.png.asset.json";
+// Bundled in public/logos so the wordmark loads on any host (Lovable, Vercel, ...).
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -47,7 +47,7 @@ function AboutPage() {
       <SiteHeader />
       <main>
         <section className="mx-auto max-w-3xl px-4 pt-16 pb-12 text-center md:px-6 md:pt-24">
-          <img src={wordmarkLight.url} alt="Cardiatelier" className="mx-auto h-20 w-auto object-contain md:h-24" />
+          <img src="/logos/wordmark-light.png" alt="Cardiatelier" className="mx-auto h-20 w-auto object-contain md:h-24" />
           <p className="eyebrow mt-8 text-gold-deep">Our Story</p>
           <h1 className="mt-3 font-display text-4xl md:text-5xl">Timeless Pieces. Endless Possibilities.</h1>
           <div className="gold-rule mx-auto mt-7 w-40" />

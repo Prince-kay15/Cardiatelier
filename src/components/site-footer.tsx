@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin } from "lucide-react";
-import wordmarkFooter from "@/assets/wordmark-footer.png.asset.json";
+// Bundled in public/logos so the wordmark loads on any host (Lovable, Vercel, ...).
 
 const address = "No. 9 Akinola Dosunmu Street, Basin";
 
@@ -41,7 +41,7 @@ export function SiteFooter() {
     <footer className="bg-night text-white/85">
       <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <div className="flex flex-col items-center gap-10 text-center">
-          <img src={wordmarkFooter.url} alt="Cardiatelier" className="h-32 w-auto object-contain md:h-44" />
+          <img src="/logos/wordmark-footer.png" alt="Cardiatelier" className="h-32 w-auto object-contain md:h-44" />
 
           <div className="grid w-full gap-10 text-sm md:grid-cols-3 md:text-left">
             <div className="space-y-3">

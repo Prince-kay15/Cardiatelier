@@ -64,6 +64,13 @@
       "when": 1793214289445,
       "tag": "0008_product_images_public_read_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793283003481,
+      "tag": "0009_owner_bound_product_image_reads",
+      "breakpoints": true
     }
   ]
 }

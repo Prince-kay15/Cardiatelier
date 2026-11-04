@@ -57,9 +57,6 @@ export function SiteFooter() {
                 <Link to="/shop" className="transition-colors hover:text-gold">Shop All</Link>
                 <Link to="/delivery" className="transition-colors hover:text-gold">Delivery &amp; Payments</Link>
                 <Link to="/contact" className="transition-colors hover:text-gold">Contact</Link>
-                <Link to="/auth" className="text-xs tracking-widest text-white/50 uppercase transition-colors hover:text-gold">
-                  Studio Login
-                </Link>
               </div>
             </div>
             <div className="space-y-3">

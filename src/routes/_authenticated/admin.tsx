@@ -17,8 +17,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
       _role: "admin",
     });
     if (!isAdmin) {
-      const { redirect } = await import("@tanstack/react-router");
-      throw redirect({ to: "/" });
+      throw (await import("@tanstack/react-router")).redirect({ to: "/auth" });
     }
   },
   component: AdminDashboard,

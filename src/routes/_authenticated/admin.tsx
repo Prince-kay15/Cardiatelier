@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { hasAdminAccess } from "@/lib/admin-access";
 import caMonogram from "@/assets/ca-monogram-mark.png";
 import { OrdersPanel } from "@/components/admin/orders-panel";
 import { ProductsPanel } from "@/components/admin/products-panel";
@@ -16,9 +17,8 @@ export const Route = createFileRoute("/_authenticated/admin")({
       _user_id: data.user.id,
       _role: "admin",
     });
-    if (!isAdmin) {
-      const { redirect } = await import("@tanstack/react-router");
-      throw redirect({ to: "/" });
+    if (!hasAdminAccess(isAdmin)) {
+      throw (await import("@tanstack/react-router")).redirect({ to: "/auth" });
     }
   },
   component: AdminDashboard,

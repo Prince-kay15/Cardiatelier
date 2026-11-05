@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import caMonogram from "@/assets/ca-monogram-mark.png";
 import { Link } from "@tanstack/react-router";
+import { hasAdminAccess } from "@/lib/admin-access";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -25,12 +26,35 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [signedIn, setSignedIn] = useState(false);
   const [awaitingConfirm, setAwaitingConfirm] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) navigate({ to: "/admin", replace: true });
-    });
+    let active = true;
+    void (async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (!active || !user) return;
+      setSignedIn(true);
+      if (userError) {
+        setError("We couldn't verify studio access. Please try signing in again.");
+        return;
+      }
+      const { data: isAdmin, error: roleError } = await supabase.rpc("has_role", {
+        _user_id: user.id,
+        _role: "admin",
+      });
+      if (!active) return;
+      if (roleError) {
+        setError("We couldn't verify studio access. Please try signing in again.");
+      } else if (hasAdminAccess(isAdmin)) {
+        navigate({ to: "/admin", replace: true });
+      } else {
+        setError("This account doesn't have studio dashboard access. Sign out and use the studio owner account.");
+      }
+    })();
+    return () => {
+      active = false;
+    };
   }, [navigate]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -42,6 +66,18 @@ function AuthPage() {
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw error;
+        setSignedIn(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error("Your sign-in couldn't be confirmed. Please try again.");
+        const { data: isAdmin, error: roleError } = await supabase.rpc("has_role", {
+          _user_id: user.id,
+          _role: "admin",
+        });
+        if (roleError) throw new Error("We couldn't verify studio access. Please try again.");
+        if (!hasAdminAccess(isAdmin)) {
+          setError("This account doesn't have studio dashboard access. Sign out and use the studio owner account.");
+          return;
+        }
         navigate({ to: "/admin", replace: true });
       } else {
         const { data, error } = await supabase.auth.signUp({
@@ -51,6 +87,18 @@ function AuthPage() {
         });
         if (error) throw error;
         if (data.session) {
+          setSignedIn(true);
+          const userId = data.user?.id;
+          if (!userId) throw new Error("Your account could not be confirmed. Please try signing in.");
+          const { data: isAdmin, error: roleError } = await supabase.rpc("has_role", {
+            _user_id: userId,
+            _role: "admin",
+          });
+          if (roleError) throw new Error("We couldn't verify studio access. Please try again.");
+          if (!hasAdminAccess(isAdmin)) {
+            setError("This account doesn't have studio dashboard access. Sign out and use the studio owner account.");
+            return;
+          }
           navigate({ to: "/admin", replace: true });
         } else {
           setAwaitingConfirm(true);
@@ -165,9 +213,22 @@ function AuthPage() {
                 </label>
 
                 {error && (
-                  <p className="border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
-                    {error}
-                  </p>
+                  <div className="border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">
+                    <p>{error}</p>
+                    {signedIn && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          await supabase.auth.signOut();
+                          setSignedIn(false);
+                          setError(null);
+                        }}
+                        className="mt-3 underline underline-offset-4"
+                      >
+                        Sign out to switch accounts
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 <button

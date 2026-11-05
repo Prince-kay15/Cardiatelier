@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+Dashboard entry points share `src/lib/admin-access.ts` so only an explicit database-confirmed admin result grants access.

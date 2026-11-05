@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import caMonogram from "@/assets/ca-monogram-mark.png";
 import { Link } from "@tanstack/react-router";
+import { hasAdminAccess } from "@/lib/admin-access";
 
 export const Route = createFileRoute("/auth")({
   component: AuthPage,
@@ -45,7 +46,7 @@ function AuthPage() {
       if (!active) return;
       if (roleError) {
         setError("We couldn't verify studio access. Please try signing in again.");
-      } else if (isAdmin) {
+      } else if (hasAdminAccess(isAdmin)) {
         navigate({ to: "/admin", replace: true });
       } else {
         setError("This account doesn't have studio dashboard access. Sign out and use the studio owner account.");
@@ -73,7 +74,7 @@ function AuthPage() {
           _role: "admin",
         });
         if (roleError) throw new Error("We couldn't verify studio access. Please try again.");
-        if (!isAdmin) {
+        if (!hasAdminAccess(isAdmin)) {
           setError("This account doesn't have studio dashboard access. Sign out and use the studio owner account.");
           return;
         }
@@ -94,7 +95,7 @@ function AuthPage() {
             _role: "admin",
           });
           if (roleError) throw new Error("We couldn't verify studio access. Please try again.");
-          if (!isAdmin) {
+          if (!hasAdminAccess(isAdmin)) {
             setError("This account doesn't have studio dashboard access. Sign out and use the studio owner account.");
             return;
           }

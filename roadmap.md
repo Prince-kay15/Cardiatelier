@@ -1,0 +1,4 @@
+- [ ] Remove first-time setup from owner sign-in and prevent public registration.
+- [ ] Restrict admin authorization to the two owner accounts using database-confirmed roles.
+- [ ] Create/verify the two owner accounts and ensure both have admin access, without storing passwords in the app.
+- [ ] Verify sign-in/admin access behavior and review the latest build status.

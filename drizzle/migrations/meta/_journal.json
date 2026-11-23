@@ -71,6 +71,13 @@
       "when": 1793283003481,
       "tag": "0009_owner_bound_product_image_reads",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795456112174,
+      "tag": "0010_restrict_admin_access_to_owners",
+      "breakpoints": true
     }
   ]
 }

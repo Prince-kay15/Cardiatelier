@@ -9,4 +9,4 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-Dashboard entry points share `src/lib/admin-access.ts` so only an explicit database-confirmed admin result grants access.
+Dashboard entry points share `src/lib/admin-access.ts`; the database `has_role` function is the security boundary and grants admin access only to the two approved owner accounts.

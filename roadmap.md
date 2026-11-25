@@ -2,3 +2,6 @@
 - [x] Restrict admin authorization to the two owner accounts using database-confirmed roles.
 - [x] Verify both existing owner accounts have admin access without storing passwords in the app.
 - [x] Verify owner role checks, sign-in page rendering, and the latest build status.
+- [ ] Accept common web-viewable picture formats in admin product uploads.
+- [ ] Ensure newly uploaded product photos display on the shop, including Vercel hosting.
+- [ ] Verify upload handling and storefront display for supported formats.
